@@ -2,8 +2,8 @@ This repository is about the existing ASIX 88179/88178a Linux USB drivers. These
 drivers have some performance issues on ARM, the transmit performance is quite
 low. It is about 9-13 MiB/s on low-end and middle-end ARMs (Cortex-A7/A53) and
 up to 20 MiB/s on really high-end ARMs (Cortex-A15/A72) while hitting full 38 to
-39 MiB/s on x86. This issue can be seen in USB 2.0 mode happens with the mainline
-driver and the Vendors own driver.
+39 MiB/s on x86. This issue can be seen in USB 2.0 mode and happens with the
+mainline driver and the Vendors own driver.
 
 So I started to write my own driver for this hardware (call asix_gbit), based on
 the mainline, vendor and generic usbnet drivers. During my work on this I also
