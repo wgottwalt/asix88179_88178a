@@ -1,0 +1,225 @@
+#ifndef __ASIX_GBIT_H__
+#define __ASIX_GBIT_H__
+
+/*
+ * asix-gbit - ASIX AX88179/AX88178A USB 3.0/2.0 gbit ethernet driver
+ * Copyright (C) 2011-2020 ASIX
+ * Copyright (C) 2020 Wilken 'Akiko' Gottwalt
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ */
+
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(4,10,0)
+#include <linux/if_ether.h>
+#endif
+
+// constants
+
+#define ASIX_PHY_ID			0x03
+#define ASIX_RX_CHECKSUM		0x01
+#define ASIX_TX_CHECKSUM		0x02
+
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(4,10,0)
+#define ASIX_MIN_MTU			ETH_MIN_MTU
+#else
+#define ASIX_MIN_MTU			0x44
+#endif
+#define ASIX_MAX_MTU			0x0FF8
+
+#define ASIX_INT_PPLS_LINK		0x01
+
+#define ASIX_RXHDR_CRC_ERR		0x20000000
+#define ASIX_RXHDR_DROP_ERR		0x80000000
+#define ASIX_RXHDR_L4_TYPE_MASK		0x1C
+#define ASIX_RXHDR_L4_TYPE_UDP		0x04
+#define ASIX_RXHDR_L4_TYPE_TCP		0x10
+#define ASIX_RXHDR_L3CSUM_ERR		0x02
+#define ASIX_RXHDR_L4CSUM_ERR		0x01
+
+#define ASIX_ACCESS_MAC			0x01
+
+#define ASIX_ACCESS_PHY			0x02
+#define ASIX_USB_FS			0x01
+#define ASIX_USB_HS			0x02
+#define ASIX_USB_SS			0x04
+
+#define ASIX_ACCESS_STATUS		0x03
+#define ASIX_MASK_WAKEUP_EVENT_4_SEC	0x01
+#define ASIX_SECLD			0x04
+
+#define ASIX_ACCESS_EEPROM		0x04
+#define ASIX_EEPROM_EFUSE_CORRECT	0x00
+#define ASIX_EEPROM_MAGIC		0x17900B95
+#define ASIX_EEPROM_LEN			0x100
+#define ASIX_EEPROM_MAX_LEN		0x40000
+#define ASIX_EEPROM_BLOCK		0x40
+#define ASIX_EFUSE_LEN			0x40
+
+#define ASIX_ACCESS_EFUSE		0x05
+
+#define ASIX_EEPROM_EFUSE_RELOAD	0x06
+
+#define ASIX_SROM_ADDR			0x07
+#define ASIX_SROM_EEP_RD		0x04
+#define ASIX_SROM_EEP_WR		0x08
+#define ASIX_SROM_CMD			0x0A
+#define ASIX_SROM_EEP_BUSY		0x10
+
+#define ASIX_SROM_DATA_LOW		0x08
+
+#define ASIX_SROM_DATA_HIGH		0x09
+
+#define ASIX_RX_CTRL			0x0B
+#define ASIX_RX_CTRL_STOP		0x0000
+#define ASIX_RX_CTRL_PRO		0x0001
+#define ASIX_RX_CTRL_AMALL		0x0002
+#define ASIX_RX_CTRL_AB			0x0008
+#define ASIX_RX_CTRL_AM			0x0010
+#define ASIX_RX_CTRL_AP			0x0020
+#define ASIX_RX_CTRL_START		0x0080
+#define ASIX_RX_CTRL_DROPCRCERR		0x0100
+#define ASIX_RX_CTRL_IPE		0x0200
+
+#define ASIX_NODE_ID			0x10
+
+#define ASIX_MULTICAST_FILTER_ARRAY	0x16
+#define ASIX_MULTICAST_FILTER_SIZE	0x08
+#define ASIX_MAX_MULTICAST		0x64
+
+#define ASIX_MEDIUM_STATUS_MODE		0x22
+#define ASIX_MEDIUM_GIGAMODE		0x0001
+#define ASIX_MEDIUM_FULL_DUPLEX		0x0002
+#define ASIX_MEDIUM_ENABLE_125MHZ	0x0008
+#define ASIX_MEDIUM_RXFLOW_CTRL_ENABLE	0x0010
+#define ASIX_MEDIUM_TXFLOW_CTRL_ENABLE	0x0020
+#define ASIX_MEDIUM_RECEIVE_ENABLE	0x0100
+#define ASIX_MEDIUM_PS			0x0200
+#define ASIX_MEDIUM_JUMBO_ENABLE	0x8040
+
+#define ASIX_MONITOR_MODE		0x24
+#define ASIX_MONITOR_MODE_RWLC		0x02
+#define ASIX_MONITOR_MODE_RWMP		0x04
+#define ASIX_MONITOR_MODE_PMEPOL	0x20
+#define ASIX_MONITOR_MODE_PMETYPE	0x40
+
+#define ASIX_GPIO_CTRL			0x25
+#define ASIX_GPIO_CTRL_GPIO1_ENABLE	0x20
+#define ASIX_GPIO_CTRL_GPIO2_ENABLE	0x40
+#define ASIX_GPIO_CTRL_GPIO3_ENABLE	0x80
+
+#define ASIX_PHYPWR_RSTCTRL		0x26
+#define ASIX_PHYPWR_RSTCTRL_BZ		0x0010
+#define ASIX_PHYPWR_RSTCTRL_IPRL	0x0020
+#define ASIX_PHYPWR_RSTCTRL_AUTODETACH	0x1000
+
+#define ASIX_RX_BULKIN_QCTRL		0x2E
+
+#define ASIX_CLK_SELECT			0x33
+#define ASIX_CLK_SELECT_BCS		0x01
+#define ASIX_CLK_SELECT_ACS		0x02
+#define ASIX_CLK_SELECT_ULR		0x08
+
+#define ASIX_RXCOE_CTRL			0x34
+#define ASIX_RXCOE_IP			0x01
+#define ASIX_RXCOE_TCP			0x02
+#define ASIX_RXCOE_UDP			0x04
+#define ASIX_RXCOE_TCPV6		0x20
+#define ASIX_RXCOE_UDPV6		0x40
+#define ASIX_RXCOE_ICMV6		0x80
+#if LINUX_VERSION_CODE < KERNEL_VERSION(3,3,0)
+#define ASIX_RXCOE_DEF_CSUM		(ASIX_RXCOE_IP | ASIX_RXCOE_TCP | ASIX_RXCOE_UDP | \
+					 ASIX_RXCOE_ICMV6 | ASIX_RXCOE_TCPV6 | ASIX_RXCOE_UDPV6)
+#endif
+
+#define ASIX_TXCOE_CTRL			0x35
+#define ASIX_TXCOE_IP			0x01
+#define ASIX_TXCOE_TCP			0x02
+#define ASIX_TXCOE_UDP			0x04
+#define ASIX_TXCOE_TCPV6		0x20
+#define ASIX_TXCOE_UDPV6		0x40
+#define ASIX_TXCOE_ICMV6		0x80
+#if LINUX_VERSION_CODE < KERNEL_VERSION(3,3,0)
+#define ASIX_TXCOE_DEF_CSUM		(ASIX_TXCOE_IP | ASIX_TXCOE_TCP | ASIX_TXCOE_UDP | \
+					 ASIX_TXCOE_ICMV6 | ASIX_TXCOE_TCPV6 | ASIX_TXCOE_UDPV6)
+#endif
+
+#define ASIX_PAUSE_LEVEL_HIGH		0x54
+
+#define ASIX_PAUSE_LEVEL_LOW		0x55
+
+#define ASIX_LED_CTRL			0x73
+
+// GMII registers
+
+#define GMII_PHY_MACR			0x0D
+#define GMII_PHY_MAADR			0x0E
+
+#define GMII_PHY_PHYSR			0x11
+#define GMII_PHY_PHYSR_LINK		0x0400
+#define GMII_PHY_PHYSR_FULL		0x2000
+#define GMII_PHY_PHYSR_100		0x4000
+#define GMII_PHY_PHYSR_GIGA		0x8000
+#define GMII_PHY_PHYSR_SMASK		0xC000
+
+#define GMII_LED_ACT			0x1A
+#define GMII_LED0_ACTIVE		0x0010
+#define GMII_LED1_ACTIVE		0x0020
+#define GMII_LED2_ACTIVE		0x0040
+#define GMII_LED_ACTIVE_MASK		0xFF8F
+
+#define GMII_LED_LINK			0x1C
+#define GMII_LED0_LINK_10		0x0001
+#define GMII_LED0_LINK_100		0x0002
+#define GMII_LED0_LINK_1000		0x0004
+#define GMII_LED1_LINK_10		0x0010
+#define GMII_LED1_LINK_100		0x0020
+#define GMII_LED1_LINK_1000		0x0040
+#define GMII_LED2_LINK_10		0x0100
+#define GMII_LED2_LINK_100		0x0200
+#define GMII_LED2_LINK_1000		0x0400
+#define GMII_LED_LINK_MASK		0xF888
+
+#define GMII_PHYPAGE			0x1E
+
+#define GMII_PHY_PAGE_SEL		0x1F
+#define GMII_PHY_PAGE_SEL_PAGE0		0x0000
+#define GMII_PHY_PAGE_SEL_PAGE3		0x0003
+#define GMII_PHY_PAGE_SEL_PAGE5		0x0005
+#define GMII_PHY_PAGE_SEL_EXT		0x0007
+
+// non-GMII led stuff
+
+#define LED0_ACTIVE			0x0001
+#define LED0_LINK_10			0x0002
+#define LED0_LINK_100			0x0004
+#define LED0_LINK_1000			0x0008
+#define LED0_FD				0x0010
+#define LED0_USB3_MASK			0x001F
+#define LED1_ACTIVE			0x0020
+#define LED1_LINK_10			0x0040
+#define LED1_LINK_100			0x0080
+#define LED1_LINK_1000			0x0100
+#define LED1_FD				0x0200
+#define LED1_USB3_MASK			0x03E0
+#define LED2_ACTIVE			0x0400
+#define LED2_LINK_10			0x0800
+#define LED2_LINK_100			0x1000
+#define LED2_LINK_1000			0x2000
+#define LED2_FD				0x4000
+#define LED2_USB3_MASK			0x7C00
+#define LED_VALID			0x8000
+
+#endif // __ASIX_GBIT_H__
