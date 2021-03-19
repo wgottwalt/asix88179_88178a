@@ -1015,7 +1015,11 @@ static const struct net_device_ops asix_gbit_netdev_ops = {
 	.ndo_set_features	= asix_gbit_ndo_set_features,
 #endif
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(4,12,0)
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(5,11,0)
+	.ndo_get_stats64	= dev_get_tstats64,
+#else
 	.ndo_get_stats64	= usbnet_get_stats64,
+#endif
 #endif
 };
 #endif
