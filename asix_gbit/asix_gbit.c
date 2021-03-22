@@ -81,28 +81,28 @@ struct asix_gbit_async_handle {
 #endif
 
 static int msg_level = 0;
-module_param(msg_level, int, 0);
+module_param(msg_level, int, 0444);
 MODULE_PARM_DESC(msg_level, "usbnet msg_enable debug message level (default: 0)");
 
 static int bulkin_size = -1;
-module_param(bulkin_size, int, S_IRUGO | S_IWUSR);
+module_param(bulkin_size, int, 0644);
 MODULE_PARM_DESC(bulkin_size, "RX bulk in queue size -1..24 (default: -1)");
 
 static int ifg = -1;
-module_param(ifg, int, S_IRUGO | S_IWUSR);
+module_param(ifg, int, 0644);
 MODULE_PARM_DESC(ifg, "RX bulk in inter frame gap -1..255 (default: -1)");
 
 static int eeprom_size = ASIX_EEPROM_LEN;
-module_param(eeprom_size, int, S_IRUGO | S_IWUSR);
+module_param(eeprom_size, int, 0644);
 MODULE_PARM_DESC(eeprom_size, "EEPROM/EFUSE size 0..262144 (default: 256)");
 
 #if LINUX_VERSION_CODE < KERNEL_VERSION(3,7,0)
 static int enable_eee = 0;
-module_param(enable_eee, int, S_IRUGO | S_IWUSR);
+module_param(enable_eee, int, 0644);
 MODULE_PARM_DESC(enable_eee, "enable EEE support 0..1 (default: 0)");
 
 static int enable_green = 0;
-module_param(enable_green, int, S_IRUGO | S_IWUSR);
+module_param(enable_green, int, 0644);
 MODULE_PARM_DESC(enable_green, "enable green ethernet support 0..1 (default: 0)");
 #endif
 
